@@ -40,6 +40,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     
     // 端末によらず、画面サイズを固定する。
     glview->setDesignResolutionSize(320, 480, ResolutionPolicy::SHOW_ALL);
+    
+    // 画像
+    FileUtils::getInstance()->addSearchPath("images");
 
     // create a scene. it's an autorelease object
 //    auto scene = HelloWorld::createScene();

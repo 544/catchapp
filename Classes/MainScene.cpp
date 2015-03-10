@@ -37,5 +37,16 @@ bool MainScene::init()
     
     // 初期化処理
     
+    //Director を取り出す
+    auto director = Director::getInstance();
+    // 画面サイズを取り出す
+    auto size = director->getWinSize();
+    // 背景のスプライトを生成する。
+    auto background = Sprite::create("background.png");
+    // スプライトの表示位置を設定
+    background->setPosition(Vec2(size.width/2.0, size.height/2.0));
+    // 親ノードにスプライトを追加
+    this->addChild(background);
+    
     return true;
 }
