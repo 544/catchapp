@@ -22,6 +22,9 @@ public:
     static cocos2d::Scene* createScene();
     // コンビニエンスコンストラクタ（createを作るマクロ。init()を宣言する必要がある。)
     CREATE_FUNC(MainScene);
+    
+    // _player変数とそのアクセサが自動的に実装される。
+    CC_SYNTHESIZE_RETAIN(cocos2d::Sprite* , _player, Player);
 };
 
 #endif /* defined(__Catch__MainScene__) */
