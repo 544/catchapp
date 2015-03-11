@@ -39,6 +39,7 @@ public:
 
     static cocos2d::Scene* createScene();
     void update(float dt);
+    void onEnterTransitionDidFinish() override;
     // コンビニエンスコンストラクタ（createを作るマクロ。init()を宣言する必要がある。)
     CREATE_FUNC(MainScene);
     

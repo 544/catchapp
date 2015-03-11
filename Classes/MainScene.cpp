@@ -7,6 +7,7 @@
 //
 
 #include "MainScene.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 
@@ -16,7 +17,7 @@ const int FRUIT_TOP_MARGIN = 40;
 // 出現率
 const int FRUIT_SPAWN_RATE = 20;
 // 制限時間
-const float TIME_LIMIT_SECOND = 60;
+const float TIME_LIMIT_SECOND = 10;
 
 
 MainScene::MainScene()
@@ -224,6 +225,7 @@ bool MainScene::removeFruit(cocos2d::Sprite *fruit){
 
 void MainScene::catchFruit(cocos2d::Sprite *fruit){
     log("Catch Fruit!");
+    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("catch_fruit.mp3");
     this->removeFruit(fruit);
     _score += 1;
     _scoreLabel->setString(StringUtils::toString(_score));
@@ -239,6 +241,7 @@ void MainScene::onResult()
                                               "replay_button_pressed.png",
                                               [](Ref* ref) {
                                                   // もう一度遊ぶをおした時の処理
+                                                  CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("decide.mp3");
                                                   auto scene = MainScene::createScene();
                                                   auto transition = TransitionFade::create(0.5, scene);
                                                   Director::getInstance()->replaceScene(transition);
@@ -255,4 +258,11 @@ void MainScene::onResult()
     menu->alignItemsVerticallyWithPadding(15);
     menu->setPosition(Vec2(winSize.width/2.0, winSize.height/2.0));
     this->addChild(menu);
+}
+
+void MainScene::onEnterTransitionDidFinish()
+{
+    Layer::onEnterTransitionDidFinish();
+    // BGMを再生する
+    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("main.mp3", true);
 }

@@ -14,6 +14,8 @@
 		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
 		3EACC98F19EE6D4300EB3C5E /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3EACC98E19EE6D4300EB3C5E /* res */; };
 		3EACC99019EE6D4300EB3C5E /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3EACC98E19EE6D4300EB3C5E /* res */; };
+		463EA9B01AB03A4100580921 /* bgm in Resources */ = {isa = PBXBuildFile; fileRef = 463EA9AF1AB03A4100580921 /* bgm */; };
+		463EA9B21AB03A4900580921 /* se in Resources */ = {isa = PBXBuildFile; fileRef = 463EA9B11AB03A4900580921 /* se */; };
 		464743A91AAF034C00C098F7 /* MainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 464743A71AAF034C00C098F7 /* MainScene.cpp */; };
 		464743DD1AAF12D400C098F7 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 464743DC1AAF12D400C098F7 /* images */; };
 		46880B7B19C43A67006E1F66 /* CloseNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 46880B7619C43A67006E1F66 /* CloseNormal.png */; };
@@ -109,6 +111,8 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765A40DF7441C002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		3EACC98E19EE6D4300EB3C5E /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; path = res; sourceTree = "<group>"; };
+		463EA9AF1AB03A4100580921 /* bgm */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bgm; sourceTree = "<group>"; };
+		463EA9B11AB03A4900580921 /* se */ = {isa = PBXFileReference; lastKnownFileType = folder; path = se; sourceTree = "<group>"; };
 		464743A71AAF034C00C098F7 /* MainScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainScene.cpp; sourceTree = "<group>"; };
 		464743A81AAF034C00C098F7 /* MainScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainScene.h; sourceTree = "<group>"; };
 		464743DC1AAF12D400C098F7 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
@@ -275,6 +279,8 @@
 		46880B7519C43A67006E1F66 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				463EA9B11AB03A4900580921 /* se */,
+				463EA9AF1AB03A4100580921 /* bgm */,
 				464743DC1AAF12D400C098F7 /* images */,
 				521A8EA819F11F5000D177D7 /* fonts */,
 				3EACC98E19EE6D4300EB3C5E /* res */,
@@ -461,6 +467,7 @@
 				50EF62A317ECD613001EB2F8 /* Icon-50.png in Resources */,
 				464743DD1AAF12D400C098F7 /* images in Resources */,
 				5087E78017EB970100C73F5D /* Icon-114.png in Resources */,
+				463EA9B21AB03A4900580921 /* se in Resources */,
 				50EF62A217ECD613001EB2F8 /* Icon-29.png in Resources */,
 				50EF629617ECD46A001EB2F8 /* Icon-40.png in Resources */,
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
@@ -471,6 +478,7 @@
 				521A8E6419F0C34300D177D7 /* Default-667h@2x.png in Resources */,
 				46880B7B19C43A67006E1F66 /* CloseNormal.png in Resources */,
 				50EF629717ECD46A001EB2F8 /* Icon-58.png in Resources */,
+				463EA9B01AB03A4100580921 /* bgm in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
