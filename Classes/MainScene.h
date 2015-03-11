@@ -28,6 +28,9 @@ public:
     CC_SYNTHESIZE_RETAIN(cocos2d::Sprite* , _player, Player);
     // 落下物とアクセサの自動定義、ただし、Vectorなのでリファレンスカウンタは操作しない。
     CC_SYNTHESIZE(cocos2d::Vector<cocos2d::Sprite *>, _fruits, Fruits);
+    // スコアと表示用のラベル
+    CC_SYNTHESIZE(int, _score, Score);
+    CC_SYNTHESIZE_RETAIN(cocos2d::Label*, _scoreLabel, ScoreLabel);
     
 
 private:

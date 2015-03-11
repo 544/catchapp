@@ -19,7 +19,9 @@ const int FRUIT_SPAWN_RATE = 20;
 
 MainScene::MainScene()
 // このクラスをインスタンス化した際に変数もNULLで初期化
-: _player(NULL)
+: _score(0)
+,_player(NULL)
+,_scoreLabel(NULL)
 {
     
 }
@@ -28,6 +30,7 @@ MainScene::~MainScene()
 {
     // デストラクタ
     CC_SAFE_RELEASE_NULL(_player);
+    CC_SAFE_RELEASE_NULL(_scoreLabel);
 }
 
 Scene* MainScene::createScene()
@@ -94,6 +97,23 @@ bool MainScene::init()
     
     // updateを毎フレーム実行する。
     this->scheduleUpdate();
+    
+    // スコアラベルの追加
+    auto scoreLabel = Label::createWithSystemFont(StringUtils::toString(_score), "Marker Flet", 16);
+    scoreLabel->setPosition(Vec2(size.width/2.0 * 1.5, size.height-40));
+    scoreLabel->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
+    scoreLabel->enableOutline(Color4B::BLACK, 1.5);
+    this->setScoreLabel(scoreLabel);
+    this->addChild(_scoreLabel);
+    
+    // スコアヘッダーの追加
+    auto scoreHeader = Label::createWithSystemFont("SCORE", "Marker Flet", 16);
+    scoreHeader->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
+    scoreHeader->enableOutline(Color4B::BLACK, 1.5);
+    scoreHeader->setPosition(size.width/2.0*1.5, size.height-20);
+    this->addChild(scoreHeader);
+    
+    
     
     return true;
 }
@@ -171,4 +191,6 @@ bool MainScene::removeFruit(cocos2d::Sprite *fruit){
 void MainScene::catchFruit(cocos2d::Sprite *fruit){
     log("Catch Fruit!");
     this->removeFruit(fruit);
+    _score += 1;
+    _scoreLabel->setString(StringUtils::toString(_score));
 }
