@@ -15,13 +15,18 @@ USING_NS_CC;
 const int FRUIT_TOP_MARGIN = 40;
 // 出現率
 const int FRUIT_SPAWN_RATE = 20;
+// 制限時間
+const float TIME_LIMIT_SECOND = 60;
 
 
 MainScene::MainScene()
 // このクラスをインスタンス化した際に変数もNULLで初期化
 : _score(0)
+,_second(TIME_LIMIT_SECOND)
+,_state(GameState::PLAYING)
 ,_player(NULL)
 ,_scoreLabel(NULL)
+,_secondLabel(NULL)
 {
     
 }
@@ -31,6 +36,7 @@ MainScene::~MainScene()
     // デストラクタ
     CC_SAFE_RELEASE_NULL(_player);
     CC_SAFE_RELEASE_NULL(_scoreLabel);
+    CC_SAFE_RELEASE_NULL(_secondLabel);
 }
 
 Scene* MainScene::createScene()
@@ -113,11 +119,31 @@ bool MainScene::init()
     scoreHeader->setPosition(size.width/2.0*1.5, size.height-20);
     this->addChild(scoreHeader);
     
+    // タイマーラベルの追加
+    int second = static_cast<int>(_second);
+    auto secondLabel = Label::createWithSystemFont(StringUtils::toString(second), "Marker Flet", 16);
+    this->setSecondLabel(secondLabel);
+    secondLabel->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
+    secondLabel->enableOutline(Color4B::BLACK, 1.5);
+    secondLabel->setPosition(Vec2(size.width/2.0, size.height-40));
+    this->addChild(secondLabel);
+    
+    // タイマーヘッダの追加
+    auto secondHeader = Label::createWithSystemFont("TIME", "Marker Flet", 16);
+    secondHeader->enableShadow(Color4B::BLACK, Size(0.5, 0.5), 3);
+    secondHeader->enableOutline(Color4B::BLACK, 1.5);
+    secondHeader->setPosition(Vec2(size.width/2.0, size.height-20));
+    this->addChild(secondHeader);
+    
     return true;
 }
 
 void MainScene::update(float dt)
 {
+    if (_state == GameState::RESULT) {
+        return;
+    }
+    
     // 毎フレーム実行される。
     int random = rand() % FRUIT_SPAWN_RATE;
     if (random == 0) {
@@ -132,6 +158,15 @@ void MainScene::update(float dt)
         if (isHit) {
             this->catchFruit(fruit);
         }
+    }
+    
+    // 残り時間を減らす
+    _second -= dt;
+    int second = static_cast<int>(_second);
+    _secondLabel->setString(StringUtils::toString(second));
+    
+    if (_second < 0) {
+        _state = GameState::RESULT;
     }
 }
 

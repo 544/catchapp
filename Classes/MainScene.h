@@ -19,6 +19,24 @@ protected:
     bool init() override;
 
 public:
+    // ゲームの状態を定義
+    enum class GameState
+    {
+        PLAYING,
+        RESULT
+    };
+    
+    // 落下物の種類を定義
+    enum class FruitsType
+    {
+        APPLE,
+        GRAPE,
+        ORANGE,
+        BANANA,
+        CHERRY,
+        COUNT
+    };
+
     static cocos2d::Scene* createScene();
     void update(float dt);
     // コンビニエンスコンストラクタ（createを作るマクロ。init()を宣言する必要がある。)
@@ -31,20 +49,13 @@ public:
     // スコアと表示用のラベル
     CC_SYNTHESIZE(int, _score, Score);
     CC_SYNTHESIZE_RETAIN(cocos2d::Label*, _scoreLabel, ScoreLabel);
-    
+    // 残り時間と表示用のラベル
+    CC_SYNTHESIZE(float, _second, Second);
+    CC_SYNTHESIZE_RETAIN(cocos2d::Label*, _secondLabel, SecondLabel);
+    // ゲームの状態
+    CC_SYNTHESIZE(GameState, _state, State);
 
 private:
-    // 落下物の種類を定義
-    enum class FruitsType
-    {
-        APPLE,
-        GRAPE,
-        ORANGE,
-        BANANA,
-        CHERRY,
-        COUNT
-    };
-
     /**
      * 画面にフルーツを配置し、それを返す。
      * @return 新たに作成されたフルーツ
