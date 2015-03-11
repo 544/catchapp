@@ -34,6 +34,8 @@ public:
         ORANGE,
         BANANA,
         CHERRY,
+        GOLDEN, // あたり
+        BOMB, // はずれ
         COUNT
     };
 

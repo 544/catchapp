@@ -18,6 +18,8 @@ const int FRUIT_TOP_MARGIN = 40;
 const int FRUIT_SPAWN_RATE = 20;
 // 制限時間
 const float TIME_LIMIT_SECOND = 10;
+// あたりをとった時の点数
+const int GOLDEN_FLUIT_SCORE = 5;
 
 
 MainScene::MainScene()
@@ -225,9 +227,27 @@ bool MainScene::removeFruit(cocos2d::Sprite *fruit){
 
 void MainScene::catchFruit(cocos2d::Sprite *fruit){
     log("Catch Fruit!");
-    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("catch_fruit.mp3");
+//    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("catch_fruit.mp3");
+    auto audioEngine = CocosDenshion::SimpleAudioEngine::getInstance();
+    
+    FruitsType fruitType = static_cast<FruitsType>(fruit->getTag());
+    switch (fruitType) {
+        case MainScene::FruitsType::GOLDEN:
+            // あたりの場合
+            _score += GOLDEN_FLUIT_SCORE;
+            audioEngine->playEffect("catch_golden.mp3");
+            break;
+        case MainScene::FruitsType::BOMB:
+            // はずれ
+            break;
+        default:
+            _score += 1;
+            audioEngine->playEffect("catch_fruit.mp3");
+            break;
+    }
+    
     this->removeFruit(fruit);
-    _score += 1;
+    
     _scoreLabel->setString(StringUtils::toString(_score));
 }
 
