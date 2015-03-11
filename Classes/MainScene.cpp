@@ -10,6 +10,13 @@
 
 USING_NS_CC;
 
+
+// フルーツの画面上端からのマージン(px)
+const int FRUIT_TOP_MARGIN = 40;
+// 出現率
+const int FRUIT_SPAWN_RATE = 20;
+
+
 MainScene::MainScene()
 // このクラスをインスタンス化した際に変数もNULLで初期化
 : _player(NULL)
@@ -85,6 +92,68 @@ bool MainScene::init()
     };
     director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
+    // updateを毎フレーム実行する。
+    this->scheduleUpdate();
     
     return true;
+}
+
+void MainScene::update(float dt)
+{
+    // 毎フレーム実行される。
+    int random = rand() % FRUIT_SPAWN_RATE;
+    if (random == 0) {
+        this->addFruit();
+    }
+}
+
+Sprite* MainScene::addFruit()
+{
+    // 画面サイズを取り出す
+    auto winSize = Director::getInstance()->getWinSize();
+    // フルーツの種類を選択する。
+    int fruitType = rand() % static_cast<int>(FruitsType::COUNT);
+    
+    // フルーツを作成する。
+    std::string filename = StringUtils::format("fruit%d.png",fruitType);
+    auto fruit = Sprite::create(filename);
+    fruit->setTag(fruitType); // フルーツの種類をタグとして指定
+    
+    auto fruitSize = fruit->getContentSize();
+    float fruitXPos = rand() % static_cast<int>(winSize.width); // x軸のランダム位置
+    fruit->setPosition(Vec2(fruitXPos, winSize.height - FRUIT_TOP_MARGIN - fruitSize.height/2.0));
+    this->addChild(fruit);
+    _fruits.pushBack(fruit);
+    
+    // フルーツに動きをつける
+
+    // 地面の座標
+    auto ground = Vec2(fruitXPos, 0);
+    // 3秒かけて地面に落とす。
+    auto fall = MoveTo::create(3, ground);
+    // removeFruitを即座に呼び出すアクション
+    auto remove = CallFuncN::create([this](Node *node){
+        // NodeをSpriteにダウンキャスト
+        auto sprite = dynamic_cast<Sprite *>(node);
+        this->removeFruit(sprite);
+    });
+    
+    // fallとremoveを連続して実行するアクション
+    auto sequence = Sequence::create(fall, remove, NULL);
+    fruit->runAction(sequence);
+    
+    return fruit;
+    
+}
+
+bool MainScene::removeFruit(cocos2d::Sprite *fruit){
+    if (_fruits.contains(fruit)) {
+        // 親ノードから削除
+        fruit->removeFromParent();
+        // _fruits配列から削除
+        _fruits.eraseObject(fruit);
+        
+        return true;
+    }
+    return false;
 }

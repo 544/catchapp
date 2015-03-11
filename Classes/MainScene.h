@@ -20,11 +20,40 @@ protected:
 
 public:
     static cocos2d::Scene* createScene();
+    void update(float dt);
     // コンビニエンスコンストラクタ（createを作るマクロ。init()を宣言する必要がある。)
     CREATE_FUNC(MainScene);
     
     // _player変数とそのアクセサが自動的に実装される。
     CC_SYNTHESIZE_RETAIN(cocos2d::Sprite* , _player, Player);
+    // 落下物とアクセサの自動定義、ただし、Vectorなのでリファレンスカウンタは操作しない。
+    CC_SYNTHESIZE(cocos2d::Vector<cocos2d::Sprite *>, _fruits, Fruits);
+    
+
+private:
+    // 落下物の種類を定義
+    enum class FruitsType
+    {
+        APPLE,
+        GRAPE,
+        ORANGE,
+        BANANA,
+        CHERRY,
+        COUNT
+    };
+
+    /**
+     * 画面にフルーツを配置し、それを返す。
+     * @return 新たに作成されたフルーツ
+     */
+    cocos2d::Sprite* addFruit();
+    
+    /**
+     * 画面からフルーツを取り除く
+     * @param fruit 削除するフルーツ
+     * @return 正しく削除されたか
+     */
+    bool removeFruit(cocos2d::Sprite* fruit);
 };
 
 #endif /* defined(__Catch__MainScene__) */
