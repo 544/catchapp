@@ -105,6 +105,16 @@ void MainScene::update(float dt)
     if (random == 0) {
         this->addFruit();
     }
+    
+    // あたり判定
+    for (auto& fruit:_fruits) {
+        Vec2 busketPosition = _player->getPosition() - Vec2(0,10);
+        Rect boundingBox = fruit->getBoundingBox(); // フルーツの矩形を取り出す
+        bool isHit = boundingBox.containsPoint(busketPosition);
+        if (isHit) {
+            this->catchFruit(fruit);
+        }
+    }
 }
 
 Sprite* MainScene::addFruit()
@@ -156,4 +166,9 @@ bool MainScene::removeFruit(cocos2d::Sprite *fruit){
         return true;
     }
     return false;
+}
+
+void MainScene::catchFruit(cocos2d::Sprite *fruit){
+    log("Catch Fruit!");
+    this->removeFruit(fruit);
 }
