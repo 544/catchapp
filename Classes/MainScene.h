@@ -57,6 +57,8 @@ public:
     CC_SYNTHESIZE_RETAIN(cocos2d::Label*, _secondLabel, SecondLabel);
     // ゲームの状態
     CC_SYNTHESIZE(GameState, _state, State);
+    // 硬直判定
+    CC_SYNTHESIZE(bool, _isCrash, IsCrash);
 
 private:
     /**
@@ -82,6 +84,10 @@ private:
      * ゲームが終了した時に呼び出される。
      */
     void onResult();
+    /**
+     * 爆弾をとってしまった時の処理
+     */
+    void onCatchBomb();
 };
 
 #endif /* defined(__Catch__MainScene__) */

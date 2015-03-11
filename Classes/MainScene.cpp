@@ -20,7 +20,8 @@ const int FRUIT_SPAWN_RATE = 20;
 const float TIME_LIMIT_SECOND = 10;
 // あたりをとった時の点数
 const int GOLDEN_FLUIT_SCORE = 5;
-
+// はずれをとった時の減点
+const int BOMB_PENALTY_SCORE = 4;
 
 MainScene::MainScene()
 // このクラスをインスタンス化した際に変数もNULLで初期化
@@ -30,6 +31,7 @@ MainScene::MainScene()
 ,_player(NULL)
 ,_scoreLabel(NULL)
 ,_secondLabel(NULL)
+,_isCrash(false)
 {
     
 }
@@ -89,6 +91,9 @@ bool MainScene::init()
         return true;
     };
     listener->onTouchMoved = [this](Touch* touch, Event* event) {
+        if (this->getIsCrash()) {
+            return;
+        }
         // タッチ中に動いた時の処理
         // 前回のタッチ位置との差を取得
         Vec2 delta = touch->getDelta();
@@ -226,6 +231,11 @@ bool MainScene::removeFruit(cocos2d::Sprite *fruit){
 }
 
 void MainScene::catchFruit(cocos2d::Sprite *fruit){
+    
+    if (this->getIsCrash()) {
+        return;
+    }
+    
     log("Catch Fruit!");
 //    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("catch_fruit.mp3");
     auto audioEngine = CocosDenshion::SimpleAudioEngine::getInstance();
@@ -239,6 +249,8 @@ void MainScene::catchFruit(cocos2d::Sprite *fruit){
             break;
         case MainScene::FruitsType::BOMB:
             // はずれ
+            this->onCatchBomb();
+            audioEngine->playEffect("catch_bomb.mp3");
             break;
         default:
             _score += 1;
@@ -285,4 +297,33 @@ void MainScene::onEnterTransitionDidFinish()
     Layer::onEnterTransitionDidFinish();
     // BGMを再生する
     CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("main.mp3", true);
+}
+
+void MainScene::onCatchBomb()
+{
+    // クラッシュ状態にする
+    _isCrash = true;
+    
+    // アニメーションの作成
+    Vector<SpriteFrame *> frames;
+    auto playerSize = _player->getContentSize();
+    const int animationFrameCount = 3;
+    for (int i = 0; i < animationFrameCount; ++i) {
+        auto rect = Rect(playerSize.width*i, 0, playerSize.width, playerSize.height);
+        auto frame = SpriteFrame::create("player_crash.png", rect);
+        frames.pushBack(frame);
+    }
+    
+    // アニメーションを再生する。
+    auto animation = Animation::createWithSpriteFrames(frames, 10.0/60.0);
+    animation->setLoops(3);
+    animation->setRestoreOriginalFrame(true);
+    _player->runAction(Sequence::create(Animate::create(animation)
+                                        , CallFunc::create([this]{
+                                            _isCrash = false;
+                                            })
+                                        , NULL));
+    _score = MAX(0, _score - BOMB_PENALTY_SCORE);
+    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("crash.mp3");
+    
 }
