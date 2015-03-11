@@ -28,7 +28,7 @@ MainScene::MainScene()
 // このクラスをインスタンス化した際に変数もNULLで初期化
 : _score(0)
 ,_second(TIME_LIMIT_SECOND)
-,_state(GameState::PLAYING)
+,_state(GameState::READY)
 ,_player(NULL)
 ,_scoreLabel(NULL)
 ,_secondLabel(NULL)
@@ -149,7 +149,7 @@ bool MainScene::init()
 
 void MainScene::update(float dt)
 {
-    if (_state == GameState::RESULT) {
+    if (_state != GameState::PLAYING) {
         return;
     }
     
@@ -175,8 +175,29 @@ void MainScene::update(float dt)
     _secondLabel->setString(StringUtils::toString(second));
     
     if (_second < 0) {
-        _state = GameState::RESULT;
-        this->onResult();
+        _state = GameState::ENDING;
+
+        // 終了文字の表示
+        auto finish = Sprite::create("finish.png");
+        auto winSize = Director::getInstance()->getWinSize();
+        finish->setPosition(Vec2(winSize.width/2.0, winSize.height/2.0));
+        finish->setScale(0);
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("finish.mp3");
+        
+        // アクションの作成
+        auto appear = EaseExponentialIn::create(ScaleTo::create(0.25, 1.0));
+        auto disappear = EaseExponentialIn::create(ScaleTo::create(0.25, 0));
+        finish->runAction(Sequence::create(appear,
+                                           DelayTime::create(2.0),
+                                           disappear,
+                                           DelayTime::create(1.0),
+                                           CallFunc::create([this]{
+            _state = GameState::RESULT;
+            this->onResult();
+        }),
+                                           NULL));
+        this->addChild(finish);
+        
     }
 }
 
@@ -266,7 +287,6 @@ void MainScene::catchFruit(cocos2d::Sprite *fruit){
 
 void MainScene::onResult()
 {
-    _state = GameState::RESULT;
     auto winSize = Director::getInstance()->getWinSize();
     
     // もう一度遊ぶボタン
@@ -301,6 +321,8 @@ void MainScene::onEnterTransitionDidFinish()
     Layer::onEnterTransitionDidFinish();
     // BGMを再生する
     CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("main.mp3", true);
+    // READY 演出を行う
+    this->addReadyLabel();
 }
 
 void MainScene::onCatchBomb()
@@ -329,5 +351,35 @@ void MainScene::onCatchBomb()
                                         , NULL));
     _score = MAX(0, _score - BOMB_PENALTY_SCORE);
     CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("crash.mp3");
+    
+}
+
+void MainScene::addReadyLabel()
+{
+    auto winSize = Director::getInstance()->getWinSize();
+    auto center = Vec2(winSize.width/2.0, winSize.height/2.0);
+    
+    // READYの文字を定義
+    auto ready = Sprite::create("ready.png");
+    ready->setScale(0);
+    ready->setPosition(center);
+    this->addChild(ready);
+    
+    // STARTの文字を定義
+    auto start = Sprite::create("start.png");
+    start->runAction(Sequence::create(CCSpawn::create(EaseIn::create(ScaleTo::create(0.5, 0.5), 0.5), FadeOut::create(0.5), NULL),
+                                      RemoveSelf::create(),
+                                      NULL));
+    start->setPosition(center);
+    
+    // READY にアニメーション追加
+    ready->runAction(Sequence::create(ScaleTo::create(0.25, 1),
+                                      DelayTime::create(1.0),
+                                      CallFunc::create([this,start]{
+        this->addChild(start);
+        _state = GameState::PLAYING;
+        CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("start.mp3");
+    }),
+                                      RemoveSelf::create(), NULL ));
     
 }

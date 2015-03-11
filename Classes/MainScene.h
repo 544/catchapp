@@ -22,7 +22,9 @@ public:
     // ゲームの状態を定義
     enum class GameState
     {
+        READY, // 開始演出
         PLAYING,
+        ENDING, // 終了演出
         RESULT
     };
     
@@ -88,6 +90,10 @@ private:
      * 爆弾をとってしまった時の処理
      */
     void onCatchBomb();
+    /**
+     * ゲーム開始の文字を追加
+     */
+    void addReadyLabel();
 };
 
 #endif /* defined(__Catch__MainScene__) */
