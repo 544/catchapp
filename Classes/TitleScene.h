@@ -11,4 +11,18 @@
 
 #include <stdio.h>
 
+class TitleScene :public cocos2d::Layer
+{
+protected:
+    TitleScene();
+    virtual ~TitleScene();
+    bool init() override;
+
+public:
+    static cocos2d::Scene* createScene();
+    void onEnterTransitionDidFinish() override;
+    CREATE_FUNC(TitleScene);
+
+};
+
 #endif /* defined(__Catch__TitleScene__) */

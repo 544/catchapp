@@ -7,6 +7,7 @@
 //
 
 #include "MainScene.h"
+#include "TitleScene.h"
 #include "SimpleAudioEngine.h"
 
 USING_NS_CC;
@@ -284,6 +285,9 @@ void MainScene::onResult()
                                              "title_button_pressed.png",
                                              [](Ref* ref) {
                                                  // タイトルに戻る処理
+                                                 auto scene = TitleScene::createScene();
+                                                 auto transition = TransitionFade::create(1.0, scene);
+                                                 Director::getInstance()->replaceScene(transition);
                                              });
     // ボタンからメニューを作成する。
     auto menu = Menu::create(replayButton, titleButton, NULL);
