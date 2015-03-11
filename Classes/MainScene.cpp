@@ -113,8 +113,6 @@ bool MainScene::init()
     scoreHeader->setPosition(size.width/2.0*1.5, size.height-20);
     this->addChild(scoreHeader);
     
-    
-    
     return true;
 }
 
