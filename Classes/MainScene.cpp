@@ -167,6 +167,7 @@ void MainScene::update(float dt)
     
     if (_second < 0) {
         _state = GameState::RESULT;
+        this->onResult();
     }
 }
 
@@ -226,4 +227,32 @@ void MainScene::catchFruit(cocos2d::Sprite *fruit){
     this->removeFruit(fruit);
     _score += 1;
     _scoreLabel->setString(StringUtils::toString(_score));
+}
+
+void MainScene::onResult()
+{
+    _state = GameState::RESULT;
+    auto winSize = Director::getInstance()->getWinSize();
+    
+    // もう一度遊ぶボタン
+    auto replayButton = MenuItemImage::create("replay_button.png",
+                                              "replay_button_pressed.png",
+                                              [](Ref* ref) {
+                                                  // もう一度遊ぶをおした時の処理
+                                                  auto scene = MainScene::createScene();
+                                                  auto transition = TransitionFade::create(0.5, scene);
+                                                  Director::getInstance()->replaceScene(transition);
+                                              }
+                                             );
+    // タイトルに戻るボタン
+    auto titleButton = MenuItemImage::create("title_button.png",
+                                             "title_button_pressed.png",
+                                             [](Ref* ref) {
+                                                 // タイトルに戻る処理
+                                             });
+    // ボタンからメニューを作成する。
+    auto menu = Menu::create(replayButton, titleButton, NULL);
+    menu->alignItemsVerticallyWithPadding(15);
+    menu->setPosition(Vec2(winSize.width/2.0, winSize.height/2.0));
+    this->addChild(menu);
 }
