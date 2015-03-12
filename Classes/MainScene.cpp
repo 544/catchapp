@@ -242,9 +242,19 @@ Sprite* MainScene::addFruit()
         auto sprite = dynamic_cast<Sprite *>(node);
         this->removeFruit(sprite);
     });
+    auto swing = Repeat::create(Sequence::create(RotateTo::create(0.25, -30),
+                                                 RotateTo::create(0.25, 30),
+                                                 NULL),
+                                2);
+    
     
     // fallとremoveを連続して実行するアクション
-    auto sequence = Sequence::create(fall, remove, NULL);
+    auto sequence = Sequence::create(ScaleTo::create(0.25, 1),
+                                     swing,
+                                     RotateTo::create(0, 0.125),
+                                     fall,
+                                     remove,
+                                     NULL);
     fruit->runAction(sequence);
     
     return fruit;
