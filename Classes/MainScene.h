@@ -61,6 +61,8 @@ public:
     CC_SYNTHESIZE(GameState, _state, State);
     // 硬直判定
     CC_SYNTHESIZE(bool, _isCrash, IsCrash);
+    // フルーツスプライトバッチ
+    CC_SYNTHESIZE_RETAIN(cocos2d::SpriteBatchNode*, _fruitsBatchNode, FruitsBatchNode);
 
 private:
     /**

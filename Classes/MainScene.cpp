@@ -33,6 +33,7 @@ MainScene::MainScene()
 ,_scoreLabel(NULL)
 ,_secondLabel(NULL)
 ,_isCrash(false)
+,_fruitsBatchNode(NULL)
 {
     
 }
@@ -43,6 +44,7 @@ MainScene::~MainScene()
     CC_SAFE_RELEASE_NULL(_player);
     CC_SAFE_RELEASE_NULL(_scoreLabel);
     CC_SAFE_RELEASE_NULL(_secondLabel);
+    CC_SAFE_RELEASE_NULL(_fruitsBatchNode);
 }
 
 Scene* MainScene::createScene()
@@ -109,6 +111,12 @@ bool MainScene::init()
         _player->setPosition(newPosition);
     };
     director->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+    
+    // BatchNodeの初期化
+    auto fruitsBatchNode = SpriteBatchNode::create("fruits.png");
+    this->addChild(fruitsBatchNode);
+    this->setFruitsBatchNode(fruitsBatchNode);
+    
     
     // updateを毎フレーム実行する。
     this->scheduleUpdate();
@@ -209,14 +217,17 @@ Sprite* MainScene::addFruit()
     int fruitType = rand() % static_cast<int>(FruitsType::COUNT);
     
     // フルーツを作成する。
-    std::string filename = StringUtils::format("fruit%d.png",fruitType);
-    auto fruit = Sprite::create(filename);
+    // テクスチャのサイズを取り出す
+    auto textureSize = _fruitsBatchNode->getTextureAtlas()->getTexture()->getContentSize();
+    auto fruitWidth = textureSize.width / static_cast<int>(FruitsType::COUNT);
+    auto fruit = Sprite::create("fruits.png",Rect(fruitWidth * fruitType, 0, fruitWidth, textureSize.height));
+    
     fruit->setTag(fruitType); // フルーツの種類をタグとして指定
     
     auto fruitSize = fruit->getContentSize();
     float fruitXPos = rand() % static_cast<int>(winSize.width); // x軸のランダム位置
     fruit->setPosition(Vec2(fruitXPos, winSize.height - FRUIT_TOP_MARGIN - fruitSize.height/2.0));
-    this->addChild(fruit);
+    _fruitsBatchNode->addChild(fruit);
     _fruits.pushBack(fruit);
     
     // フルーツに動きをつける
